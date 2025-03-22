@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChainVault - App</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to ChainVault</h1>
+        <p>This is a secure and innovative blockchain protocol designed to assist users in resolving various wallet-related issues...</p>
+    </header>
+    
+    <main>
+        <button id="connectWallet">Connect Wallet</button>
+        <div class="services">
+            <div class="service-box">Wallet Validation</div>
+            <div class="service-box">Rectification</div>
+            <div class="service-box">Private Key Recovery</div>
+            <div class="service-box">Transaction Issues</div>
+            <div class="service-box">Security Audits</div>
+        </div>
+    </main>
+
+        <footer>
+        <p>&copy; 2025 ChainVault. All Rights Reserved.</p>
+        
+    </footer>
+
+    <script>
+        // Redirect to main.html when "Connect Wallet" is clicked
+        document.getElementById("connectWallet").addEventListener("click", function() {
+            window.location.href = "main.html";
+        });
+
+        // Redirect all .service-box elements to main.html when clicked
+        document.querySelectorAll(".service-box").forEach(service => {
+            service.addEventListener("click", function() {
+                window.location.href = "main.html";
+            });
+        });
+    </script>
+</body>
+</html>
+

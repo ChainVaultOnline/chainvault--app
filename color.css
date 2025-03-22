@@ -1,0 +1,140 @@
+    
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: cover;
+}
+
+.wallet-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+}
+
+.wallet-box {
+    width: 120px;
+    height: 140px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.wallet-box:hover {
+    transform: scale(1.05);
+}
+
+.wallet-box img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+/* Popup Styles */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-in-out;
+}
+
+/* Input and Select Styling */
+.popup-content select,
+.popup-content input {
+    width: 100%;
+    height: 50px; /* Fixed height issue */
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Buttons */
+.popup-content button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.connect-btn {
+    background-color: #007BFF;
+    color: white;
+}
+
+.connect-btn:hover {
+    background-color: #0056b3;
+}
+
+.close-btn {
+    margin-top: 10px;
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.close-btn:hover {
+    background-color: #cc0000;
+}
+
+/* Authentication Message */
+#authMessage {
+    font-size: 14px;
+    font-weight: bold;
+    color: red;
+    margin-top: 5px;
+    transition: opacity 0.3s;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
