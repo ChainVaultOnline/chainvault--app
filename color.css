@@ -127,6 +127,11 @@ textarea {
     background-color: #f0f0f0;
 }
 
+.wallet-item span {
+    color: #000000; /* Changed to black for visibility against white background */
+    font-size: 1em;
+}
+
 .wallet-status {
     width: 10px;
     height: 10px;
