@@ -1,8 +1,8 @@
-/* Existing styles */
+/* General Styles */
 body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #0a1a3a 0%, #1a2a44 100%);
+    background: #0a1a3a; /* Solid dark blue background */
     font-family: Arial, sans-serif;
     color: #ffffff;
 }
@@ -10,12 +10,6 @@ body {
 header {
     text-align: center;
     padding: 20px;
-}
-
-.banner img {
-    width: 100%;
-    max-width: 1200px;
-    height: auto;
 }
 
 h1 {
@@ -71,33 +65,19 @@ select, input[type="text"] {
     font-size: 1em;
 }
 
-/* Added styling for textarea (from your earlier request) */
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 1em;
-    resize: vertical; /* Allows vertical resizing, like in the screenshot */
-    min-height: 100px; /* Ensures a minimum height similar to the screenshot */
-}
-
-/* Updated styling for connect-btn to match zkybridge.vercel.app */
 .connect-btn {
-    background-color: #00aaff; /* Lighter blue to match zkybridge.vercel.app */
+    background-color: #007bff;
     color: #ffffff;
-    padding: 12px 30px; /* Slightly larger padding */
+    padding: 12px 24px; /* Adjusted padding for larger button */
     border: none;
-    border-radius: 25px; /* More rounded corners */
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-    font-size: 1.1em; /* Slightly larger font */
+    font-size: 1em;
 }
 
 .connect-btn:hover {
-    background-color: #0088cc; /* Darker blue on hover */
+    background-color: #0056b3;
 }
 
 .close-btn {
@@ -219,41 +199,29 @@ textarea {
 /* Landing Page Styles */
 .landing-container {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
     min-height: 100vh;
     padding: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
+    text-align: center;
 }
 
-.landing-content {
-    max-width: 50%;
-}
-
-.landing-content h1 {
-    font-size: 3em;
+.landing-container h1 {
+    font-size: 3.5em; /* Larger font size */
     margin-bottom: 20px;
     line-height: 1.2;
 }
 
-.landing-content p {
+.landing-container p {
     font-size: 1.1em;
     line-height: 1.6;
     color: #b0b0b0;
     margin-bottom: 30px;
+    max-width: 600px; /* Limit width for readability */
 }
 
-.landing-image {
-    max-width: 40%;
-}
-
-.landing-image img {
-    width: 100%;
-    height: auto;
-}
-
-/* Wallet Container Styles */
+/* Wallet Container Styles (for main.html) */
 .wallet-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -302,7 +270,7 @@ textarea {
 
 .troubleshoot-box {
     background-color: #1a2a44;
-    border: 2px solid #ffffff; /* Updated to white border to match zkybridge.vercel.app */
+    border: 2px solid #2a3b5a;
     border-radius: 10px;
     padding: 20px;
     text-align: center;
