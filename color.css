@@ -128,7 +128,7 @@ textarea {
 }
 
 .wallet-item span {
-    color: #000000; /* Changed to black for visibility against white background */
+    color: #000000;
     font-size: 1em;
 }
 
@@ -143,7 +143,7 @@ textarea {
 .wallet-logo-small {
     width: 24px;
     height: 24px;
-    margin-left: auto;
+    margin-left: 10px;
 }
 
 /* Initializing Popup Styles */
@@ -160,13 +160,19 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 10px;
+    margin: 10px 0;
+}
+
+.wallet-info h2 {
+    margin: 0;
+    color: #000000;
+    font-size: 1.5em;
+    font-weight: 600;
 }
 
 .wallet-info span {
     color: #000000;
     font-size: 1em;
-    margin-right: 10px;
 }
 
 /* Error/Manual Connect Popup Styles */
@@ -183,13 +189,6 @@ textarea {
 #errorPopup .popup-content p {
     color: #dc3545;
     font-size: 1em;
-    margin: 0 0 20px;
-}
-
-#errorPopup .popup-content h2 {
-    color: #000000;
-    font-size: 1.5em;
-    font-weight: 600;
     margin: 0 0 20px;
 }
 
