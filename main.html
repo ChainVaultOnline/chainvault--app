@@ -111,8 +111,8 @@
             walletItem.setAttribute("role", "button");
             walletItem.innerHTML = `
                 <span class="wallet-status"></span>
-                <span>${wallet}</span>
                 <img src="assets/wallets/${wallet.toLowerCase()}.png" alt="${wallet} Logo" class="wallet-logo-small" onerror="this.src='assets/default.png'">
+                <span>${wallet}</span>
             `;
             walletItem.onclick = () => {
                 document.getElementById("walletPopup").style.display = "none";
