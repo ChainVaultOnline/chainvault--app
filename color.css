@@ -55,7 +55,7 @@ label {
     text-align: left;
 }
 
-select, textarea {
+select, textarea, input[type="password"] {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -64,12 +64,12 @@ select, textarea {
     box-sizing: border-box;
     font-size: 1em;
     font-family: Arial, sans-serif;
-    resize: vertical;
 }
 
 textarea {
     height: 120px;
     line-height: 1.5;
+    resize: vertical;
 }
 
 .connect-btn {
