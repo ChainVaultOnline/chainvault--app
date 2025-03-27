@@ -1,28 +1,86 @@
-/* Existing styles */
-body {
+/* Reset default styles */
+* {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #0a1a3a 0%, #1a2a44 100%);
-    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Modern blue gradient */
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hero Section Styles */
+.hero-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 700px;
+}
+
+.hero-content h1 {
+    font-size: 3.5em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
     color: #ffffff;
 }
 
-header {
-    text-align: center;
-    padding: 20px;
+.hero-content p {
+    font-size: 1.2em;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #d0d0d0;
+    margin-bottom: 30px;
 }
 
-.banner img {
-    width: 100%;
-    max-width: 1200px;
-    height: auto;
+/* Button Styles */
+.connect-btn {
+    background-color: #00d4ff; /* Bright cyan for contrast */
+    color: #1e3c72;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-h1 {
-    font-size: 2.5em;
-    margin: 20px 0;
+.connect-btn:hover {
+    background-color: #00b8e6;
+    transform: scale(1.05);
 }
 
+.close-btn {
+    background-color: #ff4d4d;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+    background-color: #e60000;
+}
+
+/* Popup Styles */
 .popup {
     display: none;
     position: fixed;
@@ -30,7 +88,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7); /* Darker overlay */
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -38,68 +96,41 @@ h1 {
 
 .popup-content {
     background: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 450px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .popup-content h2 {
-    margin: 0 0 15px;
-    color: #000000;
-    font-size: 1.5em;
+    margin: 0 0 20px;
+    color: #1e3c72;
+    font-size: 1.8em;
     font-weight: 600;
 }
 
 label {
     display: block;
     margin: 10px 0 5px;
-    color: #000000;
-    font-size: 0.9em;
+    color: #1e3c72;
+    font-size: 1em;
     text-align: left;
+    font-weight: 500;
 }
 
-select, input[type="text"] {
+textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     box-sizing: border-box;
     font-size: 1em;
-}
-
-.connect-btn {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 1em;
-}
-
-.connect-btn:hover {
-    background-color: #0056b3;
-}
-
-.close-btn {
-    background-color: #dc3545;
-    color: #ffffff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: background-color 0.3s;
-    font-size: 1em;
-}
-
-.close-btn:hover {
-    background-color: #c82333;
+    font-family: 'Poppins', sans-serif;
+    resize: vertical;
+    min-height: 120px;
 }
 
 .hidden {
@@ -116,34 +147,34 @@ select, input[type="text"] {
 .wallet-item {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 12px;
     border-bottom: 1px solid #e0e0e0;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .wallet-item:hover {
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
 }
 
 .wallet-status {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     background-color: #28a745;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 .wallet-logo-small {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     margin-left: auto;
 }
 
 /* Initializing Popup Styles */
 #initPopup .popup-content {
-    max-width: 300px;
-    min-height: 150px;
+    max-width: 350px;
+    min-height: 180px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -154,92 +185,56 @@ select, input[type="text"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .wallet-info span {
-    color: #000000;
-    font-size: 1em;
-    margin-right: 10px;
+    color: #1e3c72;
+    font-size: 1.1em;
+    margin-right: 12px;
 }
 
 /* Error/Manual Connect Popup Styles */
 #errorPopup .popup-content {
-    max-width: 400px;
-    min-height: 300px;
+    max-width: 450px;
+    min-height: 350px;
 }
 
 #errorPopup .popup-content p {
-    color: #dc3545;
+    color: #ff4d4d;
     font-size: 1em;
-    margin: 0 0 15px;
+    margin: 0 0 20px;
 }
 
 .tabs {
     display: flex;
     justify-content: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .tab-btn {
     background: none;
     border: none;
-    padding: 5px 10px;
-    margin: 0 5px;
-    color: #007bff;
+    padding: 8px 15px;
+    margin: 0 8px;
+    color: #00d4ff;
     cursor: pointer;
     font-size: 1em;
+    font-weight: 500;
     transition: color 0.3s;
 }
 
 .tab-btn.active {
-    border-bottom: 2px solid #007bff;
-    color: #007bff;
+    border-bottom: 2px solid #00d4ff;
+    color: #00d4ff;
     font-weight: 600;
 }
 
 .tab-btn:hover {
-    color: #0056b3;
+    color: #00b8e6;
 }
 
-/* Landing Page Styles */
-.landing-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 100vh;
-    padding: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.landing-content {
-    max-width: 50%;
-}
-
-.landing-content h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
-    line-height: 1.2;
-}
-
-.landing-content p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    color: #b0b0b0;
-    margin-bottom: 30px;
-}
-
-.landing-image {
-    max-width: 40%;
-}
-
-.landing-image img {
-    width: 100%;
-    height: auto;
-}
-
-/* Wallet Container Styles */
+/* Wallet Container Styles (for main.html) */
 .wallet-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -250,8 +245,8 @@ select, input[type="text"] {
 }
 
 .wallet-box {
-    background-color: #1a2a44;
-    border: 2px solid #2a3b5a;
+    background-color: #2a5298;
+    border: 2px solid #3b6db0;
     border-radius: 10px;
     padding: 15px;
     text-align: center;
@@ -276,7 +271,7 @@ select, input[type="text"] {
     object-fit: contain;
 }
 
-/* Troubleshoot Container Styles */
+/* Troubleshoot Container Styles (for syncwallets.html) */
 .troubleshoot-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -287,8 +282,8 @@ select, input[type="text"] {
 }
 
 .troubleshoot-box {
-    background-color: #1a2a44;
-    border: 2px solid #2a3b5a;
+    background-color: #2a5298;
+    border: 2px solid #3b6db0;
     border-radius: 10px;
     padding: 20px;
     text-align: center;
@@ -310,5 +305,36 @@ select, input[type="text"] {
 .troubleshoot-box p {
     margin: 0;
     font-size: 0.9em;
-    color: #b0b0b0;
+    color: #d0d0d0;
+}
+
+/* Header Styles (for main.html and syncwallets.html) */
+header {
+    text-align: center;
+    padding: 30px;
+}
+
+.banner img {
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
+    border-radius: 10px;
+}
+
+header h1 {
+    font-size: 2.8em;
+    font-weight: 700;
+    margin: 20px 0;
+    color: #ffffff;
+}
+
+header p a {
+    color: #00d4ff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+header p a:hover {
+    color: #00b8e6;
 }
