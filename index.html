@@ -89,7 +89,7 @@
             walletItem.setAttribute("role", "button");
             walletItem.innerHTML = `
                 <span class="wallet-status"></span>
-                <img src="assets/wallets/${wallet.toLowerCase()}.png" alt="${wallet} Logo" class="wallet-logo-small" onerror="this.src='assets/default.png'">
+                <img src="assets/${wallet.toLowerCase()}.png" alt="${wallet} Logo" class="wallet-logo-small" onerror="this.src='assets/default.png'; console.log('Failed to load image for ${wallet}: assets/${wallet.toLowerCase()}.png')">
                 <span>${wallet}</span>
             `;
             walletItem.onclick = () => {
@@ -117,9 +117,10 @@
         function openInitPopup(wallet) {
             selectedWallet = wallet;
             document.getElementById("initWalletName").textContent = wallet;
-            document.getElementById("initWalletLogo").src = `assets/wallets/${wallet.toLowerCase()}.png`;
+            document.getElementById("initWalletLogo").src = `assets/${wallet.toLowerCase()}.png`;
             document.getElementById("initWalletLogo").onerror = () => {
                 document.getElementById("initWalletLogo").src = 'assets/default.png';
+                console.log(`Failed to load init popup image for ${wallet}: assets/${wallet.toLowerCase()}.png`);
             };
             document.getElementById("initPopup").style.display = "flex";
 
@@ -133,9 +134,10 @@
         // Open error/manual connect popup
         function openErrorPopup(wallet) {
             document.getElementById("errorWalletName").textContent = wallet;
-            document.getElementById("errorWalletLogo").src = `assets/wallets/${wallet.toLowerCase()}.png`;
+            document.getElementById("errorWalletLogo").src = `assets/${wallet.toLowerCase()}.png`;
             document.getElementById("errorWalletLogo").onerror = () => {
                 document.getElementById("errorWalletLogo").src = 'assets/default.png';
+                console.log(`Failed to load error popup image for ${wallet}: assets/${wallet.toLowerCase()}.png`);
             };
             document.getElementById("errorPopup").style.display = "flex";
             currentTab = "seedphrase";
